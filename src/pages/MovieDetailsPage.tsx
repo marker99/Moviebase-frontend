@@ -1,18 +1,22 @@
+import { useCallback } from "react"; // Import useCallback
 import { useParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import { fetchMovieDetails } from "../services/movieService";
 import { Movie } from "../types/Movie";
 
-
 const MovieDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
-    const { data: movie, loading, error } = useFetch<Movie>(() => fetchMovieDetails(Number(id)));
+    const fetchDetails = useCallback(() => fetchMovieDetails(Number(id)), [id]); // Memoize fetch function
+
+    const { data: movie, loading, error } = useFetch<Movie>(fetchDetails, [fetchDetails]);
 
     if (loading) {
+        console.log("Loading movie details..."); // Log loading state
         return <div>Loading...</div>;
     }
 
     if (error) {
+        console.error("Error fetching movie details:", error); // Log any error
         return <div>{error}</div>;
     }
 
@@ -29,7 +33,7 @@ const MovieDetailsPage = () => {
             <p className="text-lg">{movie.overview}</p>
             <p className="text-sm text-gray-500">Release Date: {movie.release_date}</p>
         </div>
-    )
+    );
 };
 
 export default MovieDetailsPage;

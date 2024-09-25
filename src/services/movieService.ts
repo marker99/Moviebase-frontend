@@ -1,8 +1,8 @@
 import { Movie } from "../types/Movie";
 
 // Fetch popular movies
-export const fetchPopularMovies = async (): Promise<Movie[]> => {
-    const response = await fetch('http://localhost:3000/api/movies/popular');
+export const fetchMoviesByList = async (list: string): Promise<Movie[]> => {
+    const response = await fetch(`http://localhost:3000/api/movies/${list}`);
     if (!response.ok) {
         throw new Error("Failed to fetch popular movies");
     }
